@@ -71,18 +71,21 @@ class _MM1ScreenState extends State<MM1Screen>
     );
   }
 
-  void operation({lamda, miu})
-  {
+  void operation({lamda, miu}) {
     double l = double.parse(lamda);
     double mi = double.parse(miu);
 
-    double L = l / (mi - l);
-    double Lq = (l * l) / (mi * (mi - l));
-    double W = L / l;
-    double Wq = Lq / l;
+    if (l <= 0 || mi <= 0)
+      showToast('please enter a valid data');
+    else {
+      double L = l / (mi - l);
+      double Lq = (l * l) / (mi * (mi - l));
+      double W = L / l;
+      double Wq = Lq / l;
 
-    setState(() {
-      result = 'L = $L \n' + 'Lq = $Lq \n' + 'W = $W \n' + 'Wq = $Wq';
-    });
+      setState(() {
+        result = 'L = $L \n' + 'Lq = $Lq \n' + 'W = $W \n' + 'Wq = $Wq';
+      });
+    }
   }
 }

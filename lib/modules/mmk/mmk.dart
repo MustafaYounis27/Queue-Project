@@ -86,26 +86,30 @@ class _MMKScreenState extends State<MMKScreen> {
     double mi = double.parse(miu);
     int K = int.parse(k);
 
-    double P = l / mi;
-    double Pk;
-    double L;
+    if (l <= 0 || mi <= 0 || K <= 0)
+      showToast('please enter a valid data');
+    else {
+      double P = l / mi;
+      double Pk;
+      double L;
 
-    if (P != 1) {
-      Pk = pow(P, K) * ((1 - P) / (1 - pow(P, K + 1)));
-      L = P *
-          ((1 - ((K + 1) * pow(P, K)) + (K * pow(P, K + 1))) /
-              ((1 - P) * (1 - pow(P, K + 1))));
-    } else {
-      Pk = 1 / (K + 1);
-      L = K / 2;
+      if (P != 1) {
+        Pk = pow(P, K) * ((1 - P) / (1 - pow(P, K + 1)));
+        L = P *
+            ((1 - ((K + 1) * pow(P, K)) + (K * pow(P, K + 1))) /
+                ((1 - P) * (1 - pow(P, K + 1))));
+      } else {
+        Pk = 1 / (K + 1);
+        L = K / 2;
+      }
+
+      double W = L / (l * (1 - Pk));
+      double Wq = W - (1 / mi);
+      double Lq = l * (1 - Pk) * Wq;
+
+      setState(() {
+        result = 'L = $L \n' + 'Lq = $Lq \n' + 'W = $W \n' + 'Wq = $Wq';
+      });
     }
-
-    double W = L / (l * (1 - Pk));
-    double Wq = W - (1 / mi);
-    double Lq = l * (1 - Pk) * Wq;
-
-    setState(() {
-      result = 'L = $L \n' + 'Lq = $Lq \n' + 'W = $W \n' + 'Wq = $Wq';
-    });
   }
 }

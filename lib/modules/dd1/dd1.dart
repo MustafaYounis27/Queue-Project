@@ -129,102 +129,107 @@ class _DD1ScreenState extends State<DD1Screen>
     double mi = 1 / double.parse(miu);
     int K = 1 + int.parse(k);
 
-    int M;
+    int M = 0;
     if (m != null && m.length > 0) M = int.parse(m);
 
-    if (l < mi || l == mi)
-    {
-      int ti = 0;
-
-      if (l == mi) {
-        setState(() {
-          result = 'ti= ' +
-              ti.toString() +
-              '\n' +
-              'n(t)= ' +
-              M.toString() +
-              '\n\n' +
-              'Wq(n)= ' +
-              ((M - 1) * (1 / mi)).toString();
-        });
-      } else {
-        for (int i = 0; i > -1; i++)
+    if( l <= 0 || mi <= 0 || K <= 0 || M < 0)
+      showToast('please enter a valid data');
+    else
+      {
+        if (l < mi || l == mi)
         {
-          if (M == (i / (1 / mi)).toInt() - (i / (1 / l)).toInt())
-          {
-            ti = i;
-            break;
+          int ti = 0;
+
+          if (l == mi) {
+            setState(() {
+              result = 'ti= ' +
+                  ti.toString() +
+                  '\n' +
+                  'n(t)= ' +
+                  M.toString() +
+                  '\n\n' +
+                  'Wq(n)= ' +
+                  ((M - 1) * (1 / mi)).toString();
+            });
+          } else {
+            for (int i = 0; i > -1; i++)
+            {
+              if (M == (i / (1 / mi)).toInt() - (i / (1 / l)).toInt())
+              {
+                ti = i;
+                break;
+              }
+            }
+
+            setState(() {
+              result = 'ti= ' +
+                  ti.toString() +
+                  '\n' +
+                  'n(t)= ' +
+                  M.toString() +
+                  '|λt| - |μt| at t < ' +
+                  ti.toString() +
+                  '\n' +
+                  'n(t)= 0 or 1 at t => ' +
+                  ti.toString() +
+                  '\n\n' +
+                  'Wq(n)= ' +
+                  (((M - 1) / (2 * mi)).toInt()).toString() +
+                  'at n=0' +
+                  '\n' +
+                  'Wq(n)= (M-1+n)(1/μ)–n(1/λ) at n< ${(l * ti).toInt()}' +
+                  '\n' +
+                  'Wq(n)= 0   at n=> ${(l * ti).toInt()}';
+            });
+          }
+        } else if (l > mi) {
+          int ti = 0;
+
+          for (int i = 0; i > -1; i++) {
+            if (K ==
+                (i / (1 / l)).toInt() -
+                    (i / (1 / mi) - ((1 / l) / (1 / mi))).toInt()) {
+              ti = i;
+              break;
+            }
+          }
+
+          if (l % mi == 0) {
+            setState(() {
+              result = 'ti= $ti' +
+                  '\n' +
+                  'n(t) =0   at t < ${1 / l}' +
+                  '\n' +
+                  'n(t)=|λt|-|μt-μ/λ|   at $l' +
+                  '<t< $ti' +
+                  '\n' +
+                  'n(t)=' +
+                  (K - 1).toString() +
+                  'at t=> $ti' +
+                  '\n\n' +
+                  'Wq(n)= 0   at n=0' +
+                  '\n' +
+                  'Wq(n)= ${(1 / mi - 1 / l)}' +
+                  '(n-1)   at n< ${(l * ti).toInt()}' +
+                  '\n' +
+                  'Wq(n)= ${(1 / mi - 1 / l) * (l * ti - 2)} at n=> ${(l * ti).toInt()}';
+            });
+          } else {
+            setState(() {
+              result = 'ti= $ti' +
+                  '\n' +
+                  'n(t)= 0   at t< ${1 / l}' +
+                  '\n' +
+                  'n(t)= |λti|-|μti-μ/λ|   at ${1 / l}' +
+                  '<t< $ti' +
+                  '\n' +
+                  'n(t)= ${(K - 1)} or ${(K - 2)}  at t=> $ti' +
+                  '\n\n' +
+                  'Wq(n)= ${(1 / mi - 1 / l).toInt()} (n-1) at n< ${(l * ti).toInt()} \n' +
+                  'Wq(n)= ${(1 / mi - 1 / l) * (l * ti - 2).toInt()} or ${(1 / mi - 1 / l) * (l * ti - 3)} at n=> ${(l * ti).toInt()}';
+            });
           }
         }
-
-        setState(() {
-          result = 'ti= ' +
-              ti.toString() +
-              '\n' +
-              'n(t)= ' +
-              M.toString() +
-              '|λt| - |μt| at t < ' +
-              ti.toString() +
-              '\n' +
-              'n(t)= 0 or 1 at t => ' +
-              ti.toString() +
-              '\n\n' +
-              'Wq(n)= ' +
-              (((M - 1) / (2 * mi)).toInt()).toString() +
-              'at n=0' +
-              '\n' +
-              'Wq(n)= (M-1+n)(1/μ)–n(1/λ) at n< ${(l * ti).toInt()}' +
-              '\n' +
-              'Wq(n)= 0   at n=> ${(l * ti).toInt()}';
-        });
       }
-    } else if (l > mi) {
-      int ti = 0;
-
-      for (int i = 0; i > -1; i++) {
-        if (K ==
-            (i / (1 / l)).toInt() -
-                (i / (1 / mi) - ((1 / l) / (1 / mi))).toInt()) {
-          ti = i;
-          break;
-        }
-      }
-
-      if (l % mi == 0) {
-        setState(() {
-          result = 'ti= $ti' +
-              '\n' +
-              'n(t) =0   at t < ${1 / l}' +
-              '\n' +
-              'n(t)=|λt|-|μt-μ/λ|   at $l' +
-              '<t< $ti' +
-              '\n' +
-              'n(t)=' +
-              (K - 1).toString() +
-              'at t=> $ti' +
-              '\n\n' +
-              'Wq(n)= 0   at n=0' +
-              '\n' +
-              'Wq(n)= ${(1 / mi - 1 / l)}' +
-              '(n-1)   at n< ${(l * ti).toInt()}' +
-              '\n' +
-              'Wq(n)= ${(1 / mi - 1 / l) * (l * ti - 2)} at n=> ${(l * ti).toInt()}';
-        });
-      } else {
-        setState(() {
-          result = 'ti= $ti' +
-              '\n' +
-              'n(t)= 0   at t< ${1 / l}' +
-              '\n' +
-              'n(t)= |λti|-|μti-μ/λ|   at ${1 / l}' +
-              '<t< $ti' +
-              '\n' +
-              'n(t)= ${(K - 1)} or ${(K - 2)}  at t=> $ti' +
-              '\n\n' +
-              'Wq(n)= ${(1 / mi - 1 / l).toInt()} (n-1) at n< ${(l * ti).toInt()} \n' +
-              'Wq(n)= ${(1 / mi - 1 / l) * (l * ti - 2).toInt()} or ${(1 / mi - 1 / l) * (l * ti - 3)} at n=> ${(l * ti).toInt()}';
-        });
-      }
-    }
   }
 }
